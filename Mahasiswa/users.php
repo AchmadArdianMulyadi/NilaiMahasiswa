@@ -6,6 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
 require_once __DIR__ . "/connect.php";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Tangkap input search
     if (isset($_POST['search'])) {
         $search = trim($_POST['search']);
         $_SESSION['search'] = $search;
@@ -14,6 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $search = isset($_SESSION['search']) ? $_SESSION['search'] : '';
     }
 
+    // Tangkap input filter predikat (Pastikan bagian ini ada!)
     if (isset($_POST['predikat'])) {
         $predikat_filter = trim($_POST['predikat']);
         $_SESSION['predikat'] = $predikat_filter;
@@ -26,11 +28,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['page'] = (int)$_POST['page'];
     }
 } else {
-    // Tangkap perintah sorting dari klik ikon/header kolom (GET)
+    // Tangkap sorting dari GET
     if (isset($_GET['sort'])) {
         $_SESSION['sort'] = trim($_GET['sort']);
         $_SESSION['page'] = 1;
-        header("Location: users.php"); // Bersihkan parameter GET di URL
+        header("Location: users.php"); 
         exit();
     }
 
@@ -1290,11 +1292,13 @@ $result = mysqli_query($conn, $sql);
                           </div>
                           
                           <!-- Filter Predikat Sesuai Standar Asli -->
+                          <!-- Filter Predikat dengan onchange agar otomatis memfilter saat dipilih -->
                           <select
                             name="predikat"
                             id="user-role-filter"
                             class="form-select form-select-sm w-auto"
                             aria-label="Filter by predikat"
+                            onchange="this.form.submit()"
                           >
                             <option value="all" <?php if($predikat_filter == 'all') echo 'selected'; ?>>Semua Predikat</option>
                             <option value="Sangat Memuaskan" <?php if($predikat_filter == 'Sangat Memuaskan') echo 'selected'; ?>>Sangat Memuaskan</option>
